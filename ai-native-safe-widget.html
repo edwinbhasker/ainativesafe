@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Native Enterprise Operating Model — v2.1</title>
+<meta name="description" content="Consulting-grade operating model for AI-Native enterprise transformation. Aligned with AI-Native SAFe (August 2026).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── Design Tokens ─── */
+:root {
+  --bg-body: #FAF9F7;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F5F3EF;
+  --bg-warm: #F0EDE8;
+  --text-primary: #1A1A2E;
+  --text-secondary: #5C5C6D;
+  --text-tertiary: #8A8A9A;
+  --accent: #C75B39;
+  --accent-hover: #A84A2E;
+  --accent-light: #FDF0EC;
+  --accent-border: #E8C4B8;
+  --green: #2D6A4F;
+  --green-light: #E8F5EE;
+  --green-border: #B8D9C8;
+  --amber: #B8860B;
+  --amber-light: #FDF6E3;
+  --amber-border: #E8D9A8;
+  --blue: #2E5AAC;
+  --blue-light: #E8EEF8;
+  --blue-border: #B8CCE8;
+  --purple: #6B4C9A;
+  --purple-light: #F0EBF8;
+  --purple-border: #D4C4E8;
+  --border: #E8E6E1;
+  --border-strong: #D5D2CB;
+  --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 1px 2px rgba(26,26,46,0.02);
+  --shadow-md: 0 4px 12px rgba(26,26,46,0.06), 0 2px 4px rgba(26,26,46,0.03);
+  --shadow-lg: 0 12px 32px rgba(26,26,46,0.08), 0 4px 8px rgba(26,26,46,0.03);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+
+/* ─── Typography ─── */
+h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+h4 { font-size: 1rem; font-weight: 700; font-family: 'Inter', sans-serif; letter-spacing: 0; }
+p { color: var(--text-secondary); }
+
+/* ─── Skip Link ─── */
+.skip-link {
+  position: absolute; top: -48px; left: 0; z-index: 10000;
+  background: var(--accent); color: #fff; padding: 10px 20px;
+  font-weight: 600; font-size: 13px; text-decoration: none;
+  border-radius: 0 0 var(--radius-sm) 0; transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(250,249,247,0.82); backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border); padding: 0 32px;
+}
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.logo {
+  font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700;
+  color: var(--text-primary); letter-spacing: -0.5px; text-decoration: none;
+}
+.logo span { color: var(--accent); font-style: italic; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  color: var(--text-secondary); text-decoration: none; font-size: 14px;
+  font-weight: 500; letter-spacing: 0.01em; position: relative; padding: 4px 0;
+  transition: var(--transition);
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+  background: var(--accent); transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(--text-primary); }
+.nav-links a:hover::after { width: 100%; }
+.mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); font-size: 24px; cursor: pointer; }
+
+/* ─── Hero ─── */
+.hero {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 140px 32px 100px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -20%; right: -10%; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(199,91,57,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -10%; left: -5%; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(45,106,79,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { max-width: 800px; text-align: center; position: relative; z-index: 1; }
+.hero-eyebrow {
+  display: inline-block; font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--accent); margin-bottom: 24px;
+  border: 1px solid var(--accent-border); padding: 6px 16px; border-radius: 100px;
+  background: var(--accent-light);
+}
+.hero h1 { margin-bottom: 24px; color: var(--text-primary); }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--text-secondary);
+  max-width: 560px; margin: 0 auto 40px; line-height: 1.7; font-weight: 400;
+}
+.hero-meta {
+  font-size: 12px; color: var(--text-tertiary); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 32px;
+}
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
+  border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: var(--transition); cursor: pointer; border: none;
+  font-family: 'Inter', sans-serif;
+}
+.btn-primary {
+  background: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(199,91,57,0.25);
+}
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(199,91,57,0.3); }
+.btn-secondary {
+  background: var(--bg-surface); color: var(--text-primary);
+  border: 1.5px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ─── Main Layout ─── */
+main { padding-bottom: 80px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* ─── Widget Section ─── */
+.widget-section { padding: 60px 0 80px; }
+.widget-container {
+  background: var(--bg-surface); border-radius: var(--radius-xl);
+  border: 1px solid var(--border); padding: 48px;
+  box-shadow: var(--shadow-lg);
+}
+.widget-header { text-align: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+.widget-header h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); color: var(--text-primary); margin-bottom: 12px; }
+.widget-header .subtitle { font-size: 14px; color: var(--text-tertiary); font-weight: 400; }
+
+/* ─── Legend ─── */
+.legend {
+  display: flex; gap: 28px; justify-content: center; margin-bottom: 36px;
+  flex-wrap: wrap; padding: 16px; background: var(--bg-elevated); border-radius: var(--radius-md);
+}
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-human { background: var(--blue); } .dot-ai { background: var(--purple); }
+.dot-gov { background: var(--amber); } .dot-decision { background: var(--accent); }
+
+/* ─── Tabs ─── */
+.tabs-wrap { position: sticky; top: 68px; z-index: 100; background: var(--bg-surface); padding: 16px 0; margin: 0 -48px 32px; border-bottom: 1px solid var(--border); }
+.tabs {
+  display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+  max-width: 1000px; margin: 0 auto; padding: 0 24px;
+}
+.tab {
+  background: transparent; border: 1.5px solid var(--border); color: var(--text-secondary);
+  padding: 9px 18px; border-radius: 100px; cursor: pointer; font-size: 12px;
+  font-weight: 600; transition: var(--transition); white-space: nowrap; letter-spacing: 0.02em;
+  font-family: 'Inter', sans-serif;
+}
+.tab:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-light); }
+.tab.active {
+  background: var(--text-primary); color: #fff; border-color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn 0.35s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 28px; transition: var(--transition);
+}
+.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+.card-title {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+}
+.card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 768px) { .card-grid { grid-template: 1fr; } .widget-container { padding: 24px; } .tabs-wrap { margin: 0 -24px 24px; } }
+
+/* ─── Role Cards ─── */
+.role-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; transition: var(--transition); }
+.role-card:hover { border-color: var(--border-strong); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.role-card.human { border-left: 3px solid var(--blue); }
+.role-card.ai { border-left: 3px solid var(--purple); }
+.role-card.governance { border-left: 3px solid var(--amber); }
+.role-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.role-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+.badge-gov { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-human { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+.badge-ai { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+.role-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.role-desc { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; }
+
+/* ─── Highlight Box ─── */
+.highlight-box {
+  background: var(--bg-elevated); border-left: 3px solid var(--accent);
+  padding: 20px 24px; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 20px 0; font-size: 14px; color: var(--text-primary); line-height: 1.7;
+}
+.highlight-box strong { color: var(--accent); }
+
+/* ─── Tables ─── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-surface); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  background: var(--bg-elevated); color: var(--text-primary); padding: 14px 12px;
+  text-align: left; font-weight: 600; border-bottom: 2px solid var(--border-strong);
+  white-space: nowrap; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.data-table td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+.data-table tr:hover td { background: var(--bg-warm); }
+.data-table tr:last-child td { border-bottom: none; }
+.raci-r { color: var(--accent); font-weight: 700; } .raci-a { color: var(--amber); font-weight: 700; }
+.raci-c { color: var(--blue); font-weight: 700; } .raci-i { color: var(--green); font-weight: 700; }
+
+/* ─── Flow Diagrams ─── */
+.flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 24px 0; }
+.flow-box {
+  background: var(--bg-elevated); border: 1.5px solid var(--border-strong);
+  padding: 14px 18px; border-radius: var(--radius-sm); font-size: 12px;
+  font-weight: 600; text-align: center; color: var(--text-primary); min-width: 120px;
+  font-family: 'Inter', sans-serif;
+}
+.flow-arrow { color: var(--text-tertiary); font-size: 20px; font-family: 'Playfair Display', serif; }
+
+/* ─── Gov Cards ─── */
+.gov-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 768px) { .gov-grid { grid-template-columns: 1fr; } }
+.gov-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--transition); }
+.gov-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.gov-card h4 { font-size: 14px; color: var(--accent); margin: 0 0 14px; font-weight: 700; font-family: 'Inter', sans-serif; }
+.gov-card ul { margin: 0; padding-left: 18px; }
+.gov-card li { font-size: 13px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 8px; }
+.gov-card li:last-child { margin-bottom: 0; }
+.gov-card li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ─── Collab Cards ─── */
+.collab-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 768px) { .collab-grid { grid-template-columns: 1fr; } }
+.collab-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--transition); }
+.collab-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.collab-card h4 { font-size: 14px; margin: 0 0 14px; font-weight: 700; font-family: 'Inter', sans-serif; }
+.collab-card.red h4 { color: var(--accent); } .collab-card.amber h4 { color: var(--amber); }
+.collab-card.green h4 { color: var(--green); } .collab-card.blue h4 { color: var(--blue); }
+.collab-card ul { margin: 0; padding-left: 18px; }
+.collab-card li { font-size: 13px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 8px; }
+.collab-card li strong { color: var(--text-primary); }
+
+/* ─── Roadmap Timeline ─── */
+.roadmap { position: relative; padding-left: 36px; }
+.roadmap::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.roadmap-item { position: relative; margin-bottom: 32px; }
+.roadmap-item::before {
+  content: ''; position: absolute; left: -32px; top: 4px; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--accent); border: 3px solid var(--bg-surface);
+  box-shadow: 0 0 0 2px var(--accent-border);
+}
+.roadmap-item.p2::before { background: var(--purple); box-shadow: 0 0 0 2px var(--purple-border); }
+.roadmap-item.p3::before { background: var(--amber); box-shadow: 0 0 0 2px var(--amber-border); }
+.roadmap-item.p4::before { background: var(--green); box-shadow: 0 0 0 2px var(--green-border); }
+.roadmap-title { font-size: 16px; font-weight: 700; color: var(--text-primary); font-family: 'Playfair Display', serif; }
+.roadmap-desc { font-size: 13.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.75; }
+
+/* ─── Six Char Grid ─── */
+.six-char-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 768px) { .six-char-grid { grid-template-columns: 1fr; } }
+.char-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px 24px; text-align: center; transition: var(--transition); }
+.char-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.char-card .num {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--text-primary); color: #fff;
+  font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-family: 'Playfair Display', serif;
+}
+.char-card h4 { font-size: 15px; color: var(--text-primary); margin: 0 0 12px; font-weight: 600; font-family: 'Playfair Display', serif; }
+.char-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+/* ─── Outcome Tree ─── */
+
+
+/* ─── Section Divider ─── */
+.section-divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+/* ─── Footer ─── */
+footer { border-top: 1px solid var(--border); padding: 60px 32px; text-align: center; background: var(--bg-elevated); }
+.footer-inner { max-width: 800px; margin: 0 auto; }
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
+.footer-brand span { color: var(--accent); font-style: italic; }
+.social-links { display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; }
+.social-links a {
+  width: 42px; height: 42px; border-radius: 50%; background: var(--bg-surface);
+  border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); text-decoration: none; font-size: 16px; font-weight: 600;
+  transition: var(--transition);
+}
+.social-links a:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); transform: translateY(-2px); }
+.footer-text { font-size: 13px; color: var(--text-tertiary); line-height: 1.7; }
+.footer-text + .footer-text { margin-top: 12px; }
+
+/* ─── Connect Section ─── */
+.connect-section { text-align: center; padding: 80px 32px; }
+.connect-card {
+  max-width: 720px; margin: 0 auto; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius-xl);
+  padding: 56px 48px; box-shadow: var(--shadow-lg);
+}
+.connect-card h2 { margin-bottom: 16px; }
+.connect-card p { margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+/* ─── Utility ─── */
+.text-center { text-align: center; }
+.mb-4 { margin-bottom: 16px; } .mb-6 { margin-bottom: 24px; } .mb-8 { margin-bottom: 32px; }
+.mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+.text-sm { font-size: 13px; } .text-xs { font-size: 11px; }
+.text-secondary { color: var(--text-secondary); } .text-tertiary { color: var(--text-tertiary); }
+
+/* ─── Outcome Tree Visual ─── */
+.tree-container { position: relative; max-width: 720px; margin: 0 auto; padding: 20px 0; }
+.tree-node {
+  position: relative; border-radius: var(--radius-md); padding: 20px 28px;
+  border: 1.5px solid var(--border); background: var(--bg-surface);
+  box-shadow: var(--shadow-sm); transition: var(--transition);
+}
+.tree-node:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+.tree-node h5 {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
+}
+.tree-node p { font-size: 13px; line-height: 1.6; margin: 0; }
+.tree-node .meta { font-size: 11px; color: var(--text-tertiary); margin-top: 8px; font-weight: 500; }
+
+/* Level colors */
+.tree-l1 { border-left: 4px solid var(--accent); }
+.tree-l1 h5 { color: var(--accent); }
+.tree-l2 { border-left: 4px solid var(--blue); }
+.tree-l2 h5 { color: var(--blue); }
+.tree-l3 { border-left: 4px solid var(--purple); }
+.tree-l3 h5 { color: var(--purple); }
+.tree-l4 { border-left: 4px solid var(--green); }
+.tree-l4 h5 { color: var(--green); }
+
+/* Connector lines */
+.tree-connector {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; height: 48px;
+}
+.tree-connector::before {
+  content: ''; position: absolute; top: 0; width: 2px; height: 100%;
+  background: var(--border-strong);
+}
+.tree-connector-arrow {
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; font-size: 11px; font-weight: 600;
+  color: var(--text-tertiary); letter-spacing: 0.5px;
+  background: var(--bg-surface); padding: 4px 12px; border-radius: 100px;
+  border: 1px solid var(--border); z-index: 1; margin-top: 12px;
+}
+
+/* Branching at L1→L2 */
+.tree-branch-row {
+  display: flex; gap: 16px; justify-content: center;
+}
+.tree-branch-row .tree-node { flex: 1; max-width: 340px; }
+
+/* Horizontal connector for branches */
+.tree-branch-connector {
+  position: relative; height: 32px; margin: 0 auto; max-width: 400px;
+}
+.tree-branch-connector::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 100%; background: var(--border-strong);
+}
+.tree-branch-connector::after {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 80px); height: 2px; background: var(--border-strong);
+}
+
+/* Responsive tree */
+@media (max-width: 640px) {
+  .tree-branch-row { flex-direction: column; }
+  .tree-branch-row .tree-node { max-width: 100%; }
+  .tree-branch-connector::after { width: 2px; height: 100%; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<nav aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#" class="logo">AI-Native <span>Enterprise</span></a>
+    <ul class="nav-links" id="nav-links" role="menubar">
+      <li role="none"><a href="#framework" role="menuitem">Framework</a></li>
+      <li role="none"><a href="#about" role="menuitem">About</a></li>
+      <li role="none"><a href="#connect" role="menuitem">Connect</a></li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+  </div>
+</nav>
+
+<section class="hero" id="about">
+  <div class="hero-inner">
+    <h1>Designing the <em>AI-Native</em> Enterprise</h1>
+    <p class="hero-subtitle">Operating model architecture that bridges scaled agile practices, human-AI collaboration, and enterprise governance — aligned with AI-Native SAFe and transforming how organizations deliver value at scale.</p>
+    <div class="hero-meta">Version 2.1 · August 2026</div>
+    <div class="hero-cta">
+      <a href="#framework" class="btn btn-primary">Explore the Framework</a>
+      <a href="#connect" class="btn btn-secondary">Let's Talk</a>
+    </div>
+  </div>
+</section>
+
+<main id="framework">
+  <div class="container">
+    <div class="widget-section" id="main-content">
+      <div class="widget-container">
+
+        <div class="widget-header">
+          <h2>AI-Native Enterprise Operating Model for Large-Scale Transformation</h2>
+          <p class="subtitle">Enterprise Architecture Design · Human-AI Collaborative · Governance Aware</p>
+        </div>
+
+        <div class="legend" aria-label="Role type legend">
+          <div class="legend-item"><div class="legend-dot dot-human" aria-hidden="true"></div>Human Role</div>
+          <div class="legend-item"><div class="legend-dot dot-ai" aria-hidden="true"></div>AI Agent Role</div>
+          <div class="legend-item"><div class="legend-dot dot-gov" aria-hidden="true"></div>Governance / Ethics</div>
+          <div class="legend-item"><div class="legend-dot dot-decision" aria-hidden="true"></div>Decision Authority</div>
+        </div>
+
+        <div class="tabs-wrap">
+          <div class="tabs" role="tablist" aria-label="Framework sections">
+            <button class="tab active" role="tab" aria-selected="true" aria-controls="architecture" id="tab-architecture" onclick="showPanel('architecture', this)" tabindex="0">Operating Model</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="outcomes" id="tab-outcomes" onclick="showPanel('outcomes', this)" tabindex="-1">Outcome Tree</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="roles" id="tab-roles" onclick="showPanel('roles', this)" tabindex="-1">Role Definitions</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="collaboration" id="tab-collaboration" onclick="showPanel('collaboration', this)" tabindex="-1">Collaboration</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="governance" id="tab-governance" onclick="showPanel('governance', this)" tabindex="-1">Governance & Ethics</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="pipeline" id="tab-pipeline" onclick="showPanel('pipeline', this)" tabindex="-1">Innovation Pipeline</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="events" id="tab-events" onclick="showPanel('events', this)" tabindex="-1">Events & Cadence</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="gtm" id="tab-gtm" onclick="showPanel('gtm', this)" tabindex="-1">Go-to-Market</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="raci" id="tab-raci" onclick="showPanel('raci', this)" tabindex="-1">RACI Matrix</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="roadmap" id="tab-roadmap" onclick="showPanel('roadmap', this)" tabindex="-1">Roadmap</button>
+          </div>
+        </div>
+
+<!-- PANEL 1: OPERATING MODEL ARCHITECTURE -->
+<div id="architecture" class="panel active" role="tabpanel" aria-labelledby="tab-architecture">
+
+  <div class="card mb-6">
+    <div class="card-title">🔄 AI-Empowered Agility — The Four Shifts</div>
+    <p class="text-sm text-secondary mb-6">AI-Native SAFe introduces four fundamental shifts in how enterprises operate. These are sustained and fostered by a human-centric AI culture.</p>
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header">
+          <span class="role-badge badge-human">Shift 1</span>
+          <span class="role-name">Outcomes → Outcomes & Intent</span>
+        </div>
+        <div class="role-desc">Teams no longer commit only to outputs. They define measurable outcomes <em>and</em> the intent behind them — the "what," "why," and "how to win." This prevents AI velocity from producing the wrong products faster.</div>
+      </div>
+      <div class="role-card human">
+        <div class="role-header">
+          <span class="role-badge badge-human">Shift 2</span>
+          <span class="role-name">Cross-Functional → AI-Augmented Teams</span>
+        </div>
+        <div class="role-desc">Teams integrate four capabilities: Product, Builder, Domain Expert, and AI. Human creativity is amplified by AI technology, with human-in-the-loop control as the non-negotiable foundation. Team size: 3–7 members.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header">
+          <span class="role-badge badge-ai">Shift 3</span>
+          <span class="role-name">Iterative Learning → Learning & Rapid Experimentation</span>
+        </div>
+        <div class="role-desc">Cadence-based learning is augmented with continuous experimentation. Prototypes and experiments live alongside features and enablers, feeding validated learning back into the pipeline at AI speed.</div>
+      </div>
+      <div class="role-card governance">
+        <div class="role-header">
+          <span class="role-badge badge-gov">Shift 4</span>
+          <span class="role-name">Development at Scale → Development & Innovation at Scale</span>
+        </div>
+        <div class="role-desc">The operating model now explicitly balances delivery discipline with innovation velocity. Shared AI workflows, embedded policies, and curated data platforms enable both simultaneously.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">🏛️ Portfolio Level — Strategic Investment & AI Governance</div>
+    <div class="card-grid">
+      <div class="role-card governance">
+        <div class="role-header"><span class="role-badge badge-gov">Gov</span><span class="role-name">AI Ethics & Governance Board</span></div>
+        <div class="role-desc">C-level oversight body. Sets AI risk appetite, approves high-risk agent deployments, ensures responsible AI principles. Portfolio Leadership, alongside the PMO or VMO, is accountable for ensuring AI-Native ARTs move at "AI speed" within legal, financial, and ethical boundaries.</div>
+      </div>
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">AI Value Architect</span></div>
+        <div class="role-desc">A <strong>dedicated role on the ART</strong> (can be filled by Scrum Masters, Team Coaches, Product Managers, or Architects transitioning into the role). Business-literate without being Business Owners; AI-fluent without being AI developers; facilitative without being only facilitators. Operates across five responsibility areas.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Portfolio Intelligence Agent</span></div>
+        <div class="role-desc">Aggregates market signals, competitive intelligence, and internal performance data. Generates scenario models for Strategic Investment Planning. Recommends funding reallocations based on validated outcome evidence and ROI projections — including token-cost visibility.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Regulatory Horizon Scanner</span></div>
+        <div class="role-desc">Continuously monitors emerging AI regulations, industry standards, and compliance frameworks. Flags governance gaps and auto-generates policy delta reports for the AI Ethics Board.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">🚄 Large Solution Level — Solution Trains & Cross-ART Orchestration</div>
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">Solution Train Engineer (STE)</span></div>
+        <div class="role-desc">Human-in-the-Loop for cross-ART dependencies. Validates AI-generated dependency maps and risk forecasts. Owns escalations when agent confidence falls below threshold. Ensures Solution Intent integrity.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Dependency Orchestrator Agent</span></div>
+        <div class="role-desc">Monitors all ARTs within Solution Train. Auto-detects conflicts, proposes resolution paths, and updates real-time dashboards. Flags cascading delay risks before humans detect them.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Solution Risk Assessor</span></div>
+        <div class="role-desc">Evaluates how delays in one ART cascade across the organization. Runs Monte Carlo simulations on delivery confidence. Operates within guardrails, alerts on threshold breaches.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">🎯 Program Level — AI-Native ART & PI Execution</div>
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">Release Train Engineer (RTE)</span></div>
+        <div class="role-desc">Facilitates PI Outcome Planning with AI augmentation. Validates AI-generated capacity plans and team objectives. Human-on-the-Loop for ART health monitoring. Ultimate accountability for ART outcomes and flow metrics. Facilitates Sense and Respond events every iteration.</div>
+      </div>
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">Product Management + System Architect</span></div>
+        <div class="role-desc">Owns feature prioritization and outcome definition. Uses AI to analyze backlog patterns, customer sentiment, and market trends. Defines Specifications and Intent. Retains final say on "what" and "why." Ensures product vision is informed by data, aligned with strategy, and anchored to technology.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">PI Planning Co-Pilot</span></div>
+        <div class="role-desc">Auto-aggregates team backlogs, suggests objective alignment, detects dependency conflicts in real-time during PI Outcome Planning. Reduces planning time while improving outcome commitment quality.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Flow Metrics Analyst</span></div>
+        <div class="role-desc">Continuously tracks Flow Velocity, Flow Time, Flow Efficiency, Flow Load, and Flow Predictability. Generates automated ART performance health scores. Predicts risks using historical patterns and current flow data.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">👥 Team Level — AI-Native Teams & Delivery</div>
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">Product + Builder + Domain Expert</span></div>
+        <div class="role-desc">AI-Native Teams are typically <strong>3–7 members</strong>, organized around four capabilities: <strong>Product</strong> (defines vision, anchors in customer needs), <strong>Builder</strong> (utilizes AI to generate outputs), <strong>Domain Expert</strong> (brings specialized context), and <strong>AI</strong> (provides data and automation). Does NOT imply workforce reduction — enables broader outcomes.</div>
+      </div>
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">Scrum Master / Team Coach</span></div>
+        <div class="role-desc">Facilitates ceremonies with AI-generated insights. Coaches team on human-centric AI culture. Removes impediments that AI cannot resolve (political, organizational, emotional). Detects automation bias. May transition into AI Value Architect role.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">DevEx Agent (Code/Test/Doc)</span></div>
+        <div class="role-desc">Generates code, unit tests, integration tests, and technical documentation. Operates in supervised mode for production systems and delegated mode for internal tools. All outputs require human validation before merge.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Quality & Compliance Guard Agent</span></div>
+        <div class="role-desc">Auto-scans every commit for security vulnerabilities, coding standards, and policy compliance. Blocks non-compliant builds. Generates audit trails for every AI-assisted change.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Core Principle:</strong> The bottleneck has moved. The challenge is no longer whether we can build something in the time available — it is keeping up with the need to validate whether what we are building is safe, valuable, and aligned with outcomes that matter to customers and the business. Accelerating the delivery of low-ROI features does not improve performance; it compounds investment waste faster.
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 Six Characteristics of an Effective AI-Native ART</div>
+    <div class="six-char-grid">
+      <div class="char-card">
+        <div class="num">1</div>
+        <h4>Organized Around Products</h4>
+        <p>AI-Native ARTs are aligned to products and solutions, not projects. Long-lived teams own outcomes end-to-end. The ART connects work, keeps product coherent, and coordinates shared technology and AI safeguards.</p>
+      </div>
+      <div class="char-card">
+        <div class="num">2</div>
+        <h4>Outcome-Driven</h4>
+        <p>Every bet traces back to the vision. Portfolio Outcomes → ART Outcomes → PI Outcomes → Team Outcomes. Traceability is non-negotiable. ART outcomes drive prioritization, outputs, metrics, and value realization.</p>
+      </div>
+      <div class="char-card">
+        <div class="num">3</div>
+        <h4>Powered by Human Expertise and Judgement</h4>
+        <p>AI augments human judgment, not replaces it. AI Value Architects ensure human expertise remains central to decisions. Teams maintain control through human-in-the-loop review of all AI outputs.</p>
+      </div>
+      <div class="char-card">
+        <div class="num">4</div>
+        <h4>Balancing Rapid Innovation with Cadence-based Learning</h4>
+        <p>Experiments and prototypes live alongside cadence-based delivery. The AI Innovation Pipeline balances speed with discipline. Sense and Respond events every iteration drive accelerated learning.</p>
+      </div>
+      <div class="char-card">
+        <div class="num">5</div>
+        <h4>Optimizing Shared AI Workflows and Platforms</h4>
+        <p>Common AI infrastructure, curated data, and reusable agent capabilities reduce duplication and accelerate delivery. Four pipeline capabilities: AI-Empowered Workflows, Embedded Policies, Insights and Evidence, Shared Platforms.</p>
+      </div>
+      <div class="char-card">
+        <div class="num">6</div>
+        <h4>Ensuring AI Governance and Ethics</h4>
+        <p>Responsible AI is not an afterthought. Four governance pillars (Spend, Responsible AI, Agentic Behaviors, Risk Management) built on an AI Ethics foundation. Embedded policies, spend controls, and ethical guardrails are built into the operating model.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL 2: OUTCOME TREE -->
+<div id="outcomes" class="panel" role="tabpanel" aria-labelledby="tab-outcomes" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">🌳 The AI-Native SAFe Outcome Tree</div>
+    <p class="text-sm text-secondary mb-6">Strategy flows downward as purpose. Commitment flows upward as accountability. Every level connects to the one above and below through a closed loop of intent and validation.</p>
+
+    <div class="tree-container">
+      <!-- Level 1: Portfolio -->
+      <div class="tree-node tree-l1">
+        <h5>Portfolio Outcomes</h5>
+        <p>The Portfolio's contribution to the organization's strategy — the strategic bets that shape enterprise direction.</p>
+        <div class="meta">Annual · Portfolio Leadership creates · Enterprise Executives approve</div>
+      </div>
+
+      <div class="tree-connector">
+        <div class="tree-connector-arrow">↓ Purpose &nbsp;·&nbsp; ↑ Commitment</div>
+      </div>
+
+      <!-- Level 2: ART -->
+      <div class="tree-node tree-l2">
+        <h5>ART Outcomes</h5>
+        <p>The ART's contribution to Portfolio outcomes — translating strategic bets into measurable ART-level commitments.</p>
+        <div class="meta">Annual · ART Leadership & Business Owners create · Portfolio Leadership approves</div>
+      </div>
+
+      <div class="tree-connector">
+        <div class="tree-connector-arrow">↓ Purpose &nbsp;·&nbsp; ↑ Commitment</div>
+      </div>
+
+      <!-- Level 3: PI -->
+      <div class="tree-node tree-l3">
+        <h5>PI Outcomes</h5>
+        <p>The focus for the coming Program Increment that best advances ART outcomes — the near-term measurable commitments.</p>
+        <div class="meta">8–12 weeks · ART Leadership (Product Mgmt) creates · Business Owners approve</div>
+      </div>
+
+      <div class="tree-connector">
+        <div class="tree-connector-arrow">↓ Purpose &nbsp;·&nbsp; ↑ Commitment</div>
+      </div>
+
+      <!-- Level 4: Team -->
+      <div class="tree-node tree-l4">
+        <h5>Team Outcomes</h5>
+        <p>The team's contribution to the ART's PI outcomes — grounded in validated learning and owned by AI-Native Teams.</p>
+        <div class="meta">8–12 weeks · AI-Native Teams create · Business Owners approve</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">📊 Outcome Tree Hierarchy</div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Level</th><th>Scope</th><th>Time Horizon</th><th>Created By</th><th>Approved By</th></tr>
+        <tr><td><strong>Portfolio Outcomes</strong></td><td>Portfolio's contribution to enterprise strategy</td><td>Strategic investment cycle (annual)</td><td>Portfolio Leadership</td><td>Enterprise Executives</td></tr>
+        <tr><td><strong>ART Outcomes</strong></td><td>ART's contribution to Portfolio outcomes</td><td>Strategic investment cycle</td><td>ART Leadership, Business Owners</td><td>Portfolio Leadership</td></tr>
+        <tr><td><strong>PI Outcomes</strong></td><td>Focus for the PI advancing ART outcomes</td><td>PI cycle (8–12 weeks)</td><td>ART Leadership (Product Mgmt)</td><td>Business Owners</td></tr>
+        <tr><td><strong>Team Outcomes</strong></td><td>Team's contribution to PI outcomes</td><td>PI cycle</td><td>AI-Native Teams</td><td>Business Owners</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">🎯 Outcome-Driven Product Development & ROI</div>
+    <div class="flow">
+      <div class="flow-box">Portfolio<br>Outcomes</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Investment<br>Strategy</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Products &<br>Solutions</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">KPIs</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">ROI</div>
+    </div>
+    <p class="text-xs text-tertiary text-center mt-4">Feedback loops connect ROI back to Portfolio Outcomes and Investment Strategy. Forecasted vs actual ROI compared at every level.</p>
+    <div class="highlight-box mt-6">
+      <strong>ROI Discipline in the Age of AI:</strong> Token costs introduce variable operating expenses that scale with adoption. AI-native features must include inference costs in economic models. Unverifiable claims ("this will improve productivity") are poor investment criteria. Accelerating low-ROI features compounds waste faster.
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">🔭 Product Vision & Roadmap</div>
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">Product Management</span></div>
+        <div class="role-desc">Defines Product Vision that is <strong>informed by data</strong> (user feedback, market insights), <strong>aligned with strategy</strong> (portfolio outcomes, financial guardrails), and <strong>anchored to technology</strong> (architecture, platform capabilities). Vision must be accessible by both humans and agents.</div>
+      </div>
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Human</span><span class="role-name">System Architect</span></div>
+        <div class="role-desc">Ensures the vision is technically feasible and sustainable. Defines the architectural runway. Validates that AI capabilities can be delivered within platform constraints. Vision must be Desirable, Viable, Feasible, and Sustainable (DVF-S).</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Market Intelligence Agent</span></div>
+        <div class="role-desc">Synthesizes user feedback, competitive analysis, and market trends into actionable insights for Product Management. Generates customer sentiment reports and churn risk alerts using NLP and predictive models.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Agent</span><span class="role-name">Roadmap Optimizer</span></div>
+        <div class="role-desc">Analyzes feature dependencies, resource constraints, and outcome probabilities to recommend optimal sequencing. Models trade-offs between scope, time, and value. Operates as a rolling forecast emphasizing intent and milestones.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Intent, Specifications, and Context</div>
+    <div class="gov-grid">
+      <div class="gov-card">
+        <h4>Strategy Intent</h4>
+        <ul>
+          <li><strong>Where to play:</strong> Which markets, segments, and customer problems the ART will address</li>
+          <li><strong>How to win:</strong> The differentiated capability that earns customer trust and drives outcomes</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Execution Intent</h4>
+        <ul>
+          <li><strong>To build:</strong> Specific capabilities and features aligned to the hypothesis</li>
+          <li><strong>To learn:</strong> Experiments designed to validate assumptions before full investment</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Curated Data</h4>
+        <ul>
+          <li><strong>Context quality:</strong> Relevant, accurate, and timely data fed to AI agents</li>
+          <li><strong>Groundedness:</strong> All AI outputs anchored to approved institutional evidence</li>
+          <li><strong>Citation accuracy:</strong> Every recommendation traceable to its source</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Specifications</h4>
+        <ul>
+          <li><strong>Intent over instruction:</strong> Teams receive "what" and "why," not prescriptive "how"</li>
+          <li><strong>Acceptance criteria:</strong> Outcome-based validation, not output-based checklists</li>
+          <li><strong>Living documents:</strong> Updated continuously based on Sense and Respond feedback</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL 3: ROLE DEFINITIONS -->
+<div id="roles" class="panel" role="tabpanel" aria-labelledby="tab-roles" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">👤 Human Roles — Redefined for the AI-Native Enterprise</div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Role</th><th>Traditional Responsibility</th><th>AI-Native Responsibility</th><th>Decision Authority</th></tr>
+        <tr>
+          <td><strong>AI Value Architect</strong><br><span class="text-xs text-tertiary">Dedicated ART Role</span></td>
+          <td>N/A — New dedicated role on the ART</td>
+          <td>Coaches AI adoption across teams. Unlocks value from AI workflows and tools. Bridges business and technology. Facilitates AI solution development. Optimizes outcomes. Can be filled by SM, TC, PM, or Architect transitioning into the role.</td>
+          <td>High — Agent design & outcome validation</td>
+        </tr>
+        <tr>
+          <td><strong>Chief AI Ethics Officer</strong></td>
+          <td>Traditional ethics oversight</td>
+          <td>Extends governance to GenAI and agentic systems. Defines materiality tiers for AI models. Owns "effective challenge" for AI outputs. Ensures responsible AI principles are embedded. Portfolio Leadership + PMO/VMO accountable for governance execution.</td>
+          <td>Final — Ethics approval & tiering</td>
+        </tr>
+        <tr>
+          <td><strong>Product Manager</strong></td>
+          <td>Backlog prioritization</td>
+          <td>Defines intent and outcomes. Validates AI-generated customer insights. Ensures product vision is informed by data and aligned with strategy. Retains final say on "what" and "why." Drives Go-to-Market strategy and cycles.</td>
+          <td>High — Feature intent & release</td>
+        </tr>
+        <tr>
+          <td><strong>System Architect</strong></td>
+          <td>Technical architecture</td>
+          <td>Defines architectural runway for AI capabilities. Ensures platform can support AI workloads. Validates technical feasibility of AI-native solutions. Ensures vision is Desirable, Viable, Feasible, Sustainable.</td>
+          <td>High — Architecture decisions</td>
+        </tr>
+        <tr>
+          <td><strong>RTE</strong></td>
+          <td>ART facilitation</td>
+          <td>Facilitates AI-augmented PI Outcome Planning. Validates AI capacity forecasts. Governs ART-level agent deployment. Owns flow metrics and ART health. Facilitates Sense and Respond events every iteration.</td>
+          <td>Medium-High — ART flow & health</td>
+        </tr>
+        <tr>
+          <td><strong>Developer / Builder</strong></td>
+          <td>Code & test execution</td>
+          <td>Shift from execution to intent and strategy. Validate AI-generated code, tests, and documentation. Focus on complex problem-solving, architecture decisions, and customer empathy. Part of 3–7 person AI-Native Team.</td>
+          <td>Medium — Code quality & system safety</td>
+        </tr>
+        <tr>
+          <td><strong>Scrum Master</strong></td>
+          <td>Process facilitation</td>
+          <td>Team AI literacy coach. Detects "automation bias." Ensures retrospectives include AI impact analysis. Removes impediments AI cannot resolve. Natural transition path to AI Value Architect.</td>
+          <td>Medium — Team health & culture</td>
+        </tr>
+        <tr>
+          <td><strong>Domain Expert</strong><br><span class="text-xs text-tertiary">New Capability</span></td>
+          <td>Ad-hoc subject matter input</td>
+          <td>Core capability on AI-Native Teams. Brings specialized context to ensure solutions fit specific organizational needs. Ensures AI outputs are grounded in real-world domain constraints and business rules.</td>
+          <td>Medium-High — Domain validity</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">🤖 AI Agent Roles — Specialized Capabilities</div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Agent</th><th>Capability Domain</th><th>Operating Mode</th><th>Human Oversight</th><th>Risk Tier</th></tr>
+        <tr><td><strong>Portfolio Intelligence</strong></td><td>Market analysis, funding scenarios, outcome forecasting, token-cost modeling</td><td>HOTL — Recommends, human decides</td><td>Monthly Strategic Reviews</td><td>Tier 1 — Material</td></tr>
+        <tr><td><strong>Regulatory Horizon</strong></td><td>Compliance monitoring, policy delta, governance prep</td><td>HOTL — Alerts & reports</td><td>Compliance Officer validates</td><td>Tier 1 — Material</td></tr>
+        <tr><td><strong>Dependency Orchestrator</strong></td><td>Cross-ART dependency mapping, conflict detection</td><td>HOTL — Proposes resolutions</td><td>STE approves changes</td><td>Tier 2 — Standard</td></tr>
+        <tr><td><strong>PI Planning Co-Pilot</strong></td><td>Backlog aggregation, objective alignment, capacity planning</td><td>HITL — Real-time collaboration</td><td>RTE + PM during event</td><td>Tier 2 — Standard</td></tr>
+        <tr><td><strong>DevEx Agent</strong></td><td>Code generation, test creation, documentation</td><td>HITL for prod; HOTL for internal</td><td>Senior dev validates all prod changes</td><td>Tier 1/2 by system</td></tr>
+        <tr><td><strong>Quality & Compliance Guard</strong></td><td>Security scanning, compliance checking, audit logging</td><td>HOOTL — Auto-blocks violations</td><td>Security team reviews exceptions</td><td>Tier 1 — Material</td></tr>
+        <tr><td><strong>Flow Metrics Analyst</strong></td><td>Performance tracking, predictability forecasting</td><td>HOTL — Dashboards & alerts</td><td>RTE reviews weekly</td><td>Tier 3 — Low</td></tr>
+        <tr><td><strong>Customer Insight Synthesizer</strong></td><td>Sentiment analysis, journey mapping, churn prediction</td><td>HITL — Drafts for human review</td><td>PM + Legal review before use</td><td>Tier 2 — Standard</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 AI Value Architect — Five Responsibility Areas</div>
+    <div class="gov-grid">
+      <div class="gov-card">
+        <h4>1. Coaching AI Adoption</h4>
+        <ul>
+          <li>Approaches AI adoption as a coaching discipline, not a training exercise</li>
+          <li>Builds fluency in both self and teams they support</li>
+          <li>Helps teams navigate AI tool landscapes and adoption patterns</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>2. Unlocking Value from AI Workflows and Tools</h4>
+        <ul>
+          <li>Identifies built-in AI features in existing tools and platforms</li>
+          <li>Unlocks value to improve team workflows and reduce friction</li>
+          <li>Optimizes tool configurations for maximum AI leverage</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>3. Bridging Business and Technology</h4>
+        <ul>
+          <li>Collaborates across business and technology functions</li>
+          <li>Introduces new considerations in risk, legal, data, and ethics</li>
+          <li>Addresses cross-functional challenges as business opportunities</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>4. Facilitating AI Solution Development</h4>
+        <ul>
+          <li>Manages new AI failure modes: data quality shifts, model drift, evaluation gaps</li>
+          <li>Ensures right conversations take place and dangerous assumptions are avoided</li>
+          <li>Guides teams from prototype to production safely</li>
+        </ul>
+      </div>
+      <div class="gov-card" style="grid-column: 1 / -1;">
+        <h4>5. Optimizing Outcomes</h4>
+        <ul>
+          <li>Relentless focus on driving better outcomes for the business and its customers</li>
+          <li>Helps teams and ARTs navigate toward measurable value</li>
+          <li>Connects every AI investment to portfolio outcomes and ROI</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL 4: COLLABORATION -->
+<div id="collaboration" class="panel" role="tabpanel" aria-labelledby="tab-collaboration" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">🔄 Human-AI Collaboration Patterns</div>
+    <div class="collab-grid">
+      <div class="collab-card red">
+        <h4>🔴 Human-in-the-Loop (HITL)</h4>
+        <ul>
+          <li><strong>Pattern:</strong> AI pauses at defined decision points; human must approve before proceeding</li>
+          <li><strong>Use Cases:</strong> Customer-facing decisions, material financial approvals, model validation reports, adverse-action language, high-stakes recommendations</li>
+          <li><strong>Industry Practice:</strong> Leading enterprises consistently emphasize that customer-impacting decisions require human oversight — a principle reflected across regulated and unregulated sectors alike.</li>
+          <li><strong>Staffing:</strong> Dedicated reviewers per active AI workflow</li>
+        </ul>
+      </div>
+      <div class="collab-card amber">
+        <h4>🟡 Human-on-the-Loop (HOTL)</h4>
+        <ul>
+          <li><strong>Pattern:</strong> AI operates autonomously within guardrails; humans monitor dashboards and intervene on exceptions</li>
+          <li><strong>Use Cases:</strong> Transaction monitoring, pattern detection, dependency management, capacity forecasting, internal research, operational analytics</li>
+          <li><strong>Guardrails:</strong> Confidence thresholds, materiality limits, four-eyes rules on writes above threshold</li>
+          <li><strong>Staffing:</strong> Supervisors monitor multiple AI agents simultaneously</li>
+        </ul>
+      </div>
+      <div class="collab-card green">
+        <h4>🟢 Human-out-of-the-Loop (HOOTL)</h4>
+        <ul>
+          <li><strong>Pattern:</strong> Full autonomy for predetermined low-risk scenarios; humans review post-operationally</li>
+          <li><strong>Use Cases:</strong> Code linting, documentation generation, internal FAQ handling, log analysis, non-material reporting, data transformation</li>
+          <li><strong>Requirement:</strong> Audit trail of every autonomous action; periodic sampling review</li>
+          <li><strong>Staffing:</strong> Periodic auditors, not real-time oversight</li>
+        </ul>
+      </div>
+      <div class="collab-card blue">
+        <h4>🔵 Co-Creative Collaboration</h4>
+        <ul>
+          <li><strong>Pattern:</strong> Humans and AI jointly contribute cognitive value; neither could produce outcome alone</li>
+          <li><strong>Use Cases:</strong> Product innovation workshops, scenario stress testing, process redesign, strategic planning, creative design, problem-solving sessions</li>
+          <li><strong>Key:</strong> Shared authority, context-dependent; requires high-trust teams and mature AI literacy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box mb-6">
+    <strong>Decision Rights Framework:</strong> AI can <em>recommend</em> across all tiers. AI may <em>execute</em> only within defined guardrails for Tier-2 and Tier-3. Humans retain <em>final authority</em> for all Tier-1 (material) decisions affecting customers, employees, or business-critical outcomes.
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">📊 Collaboration Intensity by Value Stream</div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Value Stream</th><th>HITL %</th><th>HOTL %</th><th>HOOTL %</th><th>Rationale</th></tr>
+        <tr><td>Customer-Facing Products</td><td class="raci-r">85%</td><td class="raci-a">10%</td><td class="raci-i">5%</td><td>Customer trust, brand reputation, legal liability</td></tr>
+        <tr><td>Financial Operations</td><td class="raci-r">70%</td><td class="raci-a">25%</td><td class="raci-i">5%</td><td>Materiality, audit requirements, accuracy critical</td></tr>
+        <tr><td>Core Platform Engineering</td><td class="raci-r">40%</td><td class="raci-a">45%</td><td class="raci-i">15%</td><td>Code review for core; automated testing for non-core</td></tr>
+        <tr><td>Internal Operations / HR</td><td class="raci-r">15%</td><td class="raci-a">30%</td><td class="raci-i">55%</td><td>Lower external exposure; higher automation potential</td></tr>
+        <tr><td>Regulatory & Compliance</td><td class="raci-r">75%</td><td class="raci-a">20%</td><td class="raci-i">5%</td><td>Accuracy critical; explainability required by auditors</td></tr>
+        <tr><td>Research & Development</td><td class="raci-r">30%</td><td class="raci-a">40%</td><td class="raci-i">30%</td><td>Experimentation-friendly; rapid iteration valued</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌊 AI-Native Team Flow Model</div>
+    <p class="text-sm text-secondary mb-6">AI-Native Teams operate with a flow-based approach defined by three primary activities. This creates the necessary flow to maintain high performance while balancing autonomy with ART-level alignment.</p>
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Flow 1</span><span class="role-name">Align</span></div>
+        <div class="role-desc">Brings the team together to make key decisions and maintain a shared direction. Ensures team outcomes connect to PI outcomes and ART vision. Human-led with AI-assisted context synthesis.</div>
+      </div>
+      <div class="role-card ai">
+        <div class="role-header"><span class="role-badge badge-ai">Flow 2</span><span class="role-name">Sense</span></div>
+        <div class="role-desc">Uses data and feedback to monitor products, workflows, and the user environment. AI agents aggregate signals from customer support, usage analytics, and market data. Alerts when threshold deviations exceed guardrails.</div>
+      </div>
+      <div class="role-card governance">
+        <div class="role-header"><span class="role-badge badge-gov">Flow 3</span><span class="role-name">Respond</span></div>
+        <div class="role-desc">Allows the team to adjust workflows based on insights. Teams respond to sense signals by adjusting priorities within the PI. Maintains flow while adapting to change. Models impact of priority shifts on outcomes.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL 5: AI GOVERNANCE & ETHICS -->
+<div id="governance" class="panel" role="tabpanel" aria-labelledby="tab-governance" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">🏛️ AI Governance & Ethics Architecture</div>
+    <p class="text-sm text-secondary mb-6">AI Governance and Ethics is not an afterthought — it is embedded into the operating model through four pillars built on a foundation of AI Ethics. Portfolio Leadership, alongside the PMO or VMO, is accountable for ensuring AI-Native ARTs and Teams have the confidence to move at "AI speed" while staying within legal, financial, and ethical boundaries.</p>
+
+    <div class="gov-grid">
+      <div class="gov-card">
+        <h4>1. Controlling AI Spend</h4>
+        <ul>
+          <li><strong>What:</strong> Tracking AI spending and cumulative usage-based token costs across value streams</li>
+          <li><strong>Why:</strong> Token costs introduce variable operating expenses that scale with adoption; without visibility, ROI is overstated</li>
+          <li><strong>Controls:</strong> Per-value-stream token budgets aligned to portfolio funding; cost attribution and chargeback to ARTs; alert thresholds at 50% (info), 75% (warning), 90% (critical block); variable-cost visibility for every agent interaction</li>
+          <li><strong>AI Support:</strong> Auto-tracking of token consumption; anomaly detection on spend patterns; ROI forecasting models</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>2. Enforcing Responsible AI</h4>
+        <ul>
+          <li><strong>What:</strong> Promoting responsible practices to keep AI systems trustworthy and aligned with human values</li>
+          <li><strong>Why:</strong> Increased AI usage and unpredictable generative AI introduce risks traditional controls cannot manage</li>
+          <li><strong>Controls:</strong> Fairness testing across demographic groups; transparency and explainability for Tier-1 decisions; accountability with every output attributable to a human owner; privacy via PII detection and data minimization; safety via output scanning for toxicity, bias, and hallucination</li>
+          <li><strong>AI Support:</strong> Automated bias detection; PII masking; toxicity scanning; explainability report generation</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>3. Monitoring Agentic Behaviors</h4>
+        <ul>
+          <li><strong>What:</strong> Monitoring independent AI actions through automated checks and human review</li>
+          <li><strong>Why:</strong> Agentic AI operates with degrees of autonomy that require continuous oversight to detect drift and policy breaches</li>
+          <li><strong>Controls:</strong> Agent activity logging (prompt, context, response, human action, outcome); drift detection via statistical monitoring; guardrail trigger rate alerts; chain-of-thought audit for multi-step reasoning; cross-agent conflict detection</li>
+          <li><strong>AI Support:</strong> Automated drift detection; behavioral anomaly alerts; cross-agent consistency checking</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>4. Managing & Exploiting AI Risks</h4>
+        <ul>
+          <li><strong>What:</strong> Managing AI risks while systematically identifying opportunities for innovation</li>
+          <li><strong>Why:</strong> Governance must enable speed, not just constrain it. Risk-aware organizations move faster because they trust their guardrails.</li>
+          <li><strong>Controls:</strong> Risk inventory mapping every agent to risk tier and mitigation; effective challenge by independent validators; incident response playbooks for AI drift, bias, or failure; systematic identification of new AI use cases; competitive intelligence on AI adoption</li>
+          <li><strong>AI Support:</strong> Risk scenario modeling; automated incident pattern detection; competitive signal aggregation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">📋 Approved-Use Boundary Determination</div>
+    <div class="flow">
+      <div class="flow-box">Inventory &<br>Tiering</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Development &<br>Validation</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Deployment &<br>ABAC Controls</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Continuous<br>Monitoring</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Effective<br>Challenge</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Retirement &<br>Archive</div>
+    </div>
+    <p class="text-xs text-tertiary text-center mt-4">Every stage generates auditable artifacts. Tier-1 agents require dual control and independent validator approval.</p>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Governance Reality Check:</strong> Most AI governance frameworks are written for models, not agents. The gap between "excluded from formal model scope" and "ungoverned" is where regulatory exposure lives. This architecture treats agentic AI as a first-class governance citizen. Portfolio Leadership and the PMO/VMO are accountable for ensuring teams move at AI speed within boundaries.
+  </div>
+
+</div>
+
+<!-- PANEL 6: INNOVATION PIPELINE -->
+<div id="pipeline" class="panel" role="tabpanel" aria-labelledby="tab-pipeline" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">🧪 The AI Innovation Pipeline</div>
+    <p class="text-sm text-secondary mb-6">The AI Innovation Pipeline helps AI-Native Teams, ARTs, and Portfolios build products with a shared and reusable set of capabilities. It covers five stages that support outcome-driven product development. The pipeline is continually optimized to support learning and validation, helping teams work safely at the speed of AI.</p>
+
+    <div class="flow">
+      <div class="flow-box">Discover</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Specify</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Build</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Validate</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Release</div>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:40px;margin-top:20px;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:600;">Work Item Types</div>
+        <div style="font-size:12px;color:var(--text-secondary);">🧪 Experiments &nbsp;📐 Prototypes &nbsp;⭐ Features &nbsp;🔧 Enablers</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:600;">Pipeline Capabilities</div>
+        <div style="font-size:12px;color:var(--text-secondary);">AI-Empowered Workflows · Embedded Policies · Insights & Evidence · Shared Platforms</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">📋 Pipeline Stage Definitions</div>
+    <div class="gov-grid">
+      <div class="gov-card">
+        <h4>Discover</h4>
+        <ul>
+          <li>Refines the intent behind the work: the problem it addresses and the outcomes it is meant to produce</li>
+          <li>Tests hypotheses through experiments or delivers value directly via features</li>
+          <li>Human-led with AI-assisted market and customer signal synthesis</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Specify</h4>
+        <ul>
+          <li>Elaborates intent into specifications — the "what and how" — along with context for teams and AI agents</li>
+          <li>Produces living documents updated continuously via Sense and Respond feedback</li>
+          <li>AI assists with dependency analysis and specification drafting</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Build</h4>
+        <ul>
+          <li>Produces the output defined by the specification</li>
+          <li>Ranges from lightweight probe for learning outputs to integrated, release-ready candidates for value capture</li>
+          <li>AI generates code, tests, docs; human validates all production-bound outputs</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Validate</h4>
+        <ul>
+          <li>Tests the output against its purpose</li>
+          <li>For learning outputs (prototypes): checks assumptions and hypotheses</li>
+          <li>For value outputs (features): determines usefulness, appropriateness, and release readiness</li>
+        </ul>
+      </div>
+      <div class="gov-card" style="grid-column: 1 / -1;">
+        <h4>Release</h4>
+        <ul>
+          <li>Delivers features to production and into users' hands</li>
+          <li>Turns real use into value and telemetry into learning</li>
+          <li>Experiments and prototypes usually conclude at validation; A/B testing may result in experiment release</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Pipeline Principle:</strong> No single lifecycle fits every organization, ART, or product. The combination of Kanban visualization aligned to lifecycle steps with meaningful flow metrics provides critical feedback as the ART seeks to "make value flow without interruptions."
+  </div>
+
+</div>
+
+<!-- PANEL 7: EVENTS & CADENCE -->
+<div id="events" class="panel" role="tabpanel" aria-labelledby="tab-events" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">📅 PI Outcome Planning — Official 1-Day Agenda</div>
+    <p class="text-sm text-secondary mb-6">The two-day PI Planning event has been replaced by a one-day PI Outcome Planning event that focuses on in-flight realignment. The emphasis shifts from output commitments to outcome validation, with AI agents handling aggregation and alignment analysis in real time.</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Time</th><th>Activity</th><th>Human Role</th><th>AI Agent Role</th></tr>
+        <tr><td colspan="4" style="background:var(--bg-elevated);color:var(--text-primary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Morning — 3.5 Hours (Draft the Plan)</td></tr>
+        <tr><td>30 min</td><td><strong>Business Context</strong><br>Portfolio outcomes, market shifts, strategic themes</td><td>Business Owners present context. PMs clarify intent.</td><td>Portfolio Intelligence Agent surfaces market data and competitive signals</td></tr>
+        <tr><td>1 hr</td><td><strong>Outcome Breakout</strong><br>Teams propose measurable outcomes for the PI</td><td>Teams draft outcomes with Product Management. RTE facilitates.</td><td>PI Planning Co-Pilot suggests alignment checks and detects conflicts</td></tr>
+        <tr><td>1 hr</td><td><strong>Team Breakout</strong><br>Individual teams assess capacity and resolve constraints</td><td>Teams negotiate trade-offs. STE validates cross-ART dependencies.</td><td>Dependency Orchestrator auto-generates maps and flags cascading risks</td></tr>
+        <tr><td>30 min</td><td><strong>Outcome Breakout</strong><br>Draft the PI Outcome Planning Board / Surface Decisions Needed and Risks</td><td>RTE validates capacity. Teams confirm commitment confidence.</td><td>Flow Metrics Analyst provides predictability forecasts and risk alerts</td></tr>
+        <tr><td colspan="4" style="background:var(--bg-elevated);color:var(--text-primary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Lunch & Management Review and Problem-Solving</td></tr>
+        <tr><td colspan="4" style="background:var(--bg-elevated);color:var(--text-primary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Afternoon — 3.5 Hours (Finalize the Plan)</td></tr>
+        <tr><td>30 min</td><td><strong>Communicate Planning Adjustments</strong><br>Leadership communicates scope or priority changes</td><td>Business Owners challenge and refine. PMs adjust scope.</td><td>Portfolio Intelligence Agent models scenario impacts of scope changes</td></tr>
+        <tr><td>30 min</td><td><strong>Outcome Breakout</strong><br>Refine outcomes based on adjustments</td><td>Teams adjust outcomes. RTE ensures alignment.</td><td>Co-Pilot re-checks alignment and detects new conflicts</td></tr>
+        <tr><td>1 hr</td><td><strong>Team Breakout</strong><br>Final capacity and commitment validation</td><td>Teams finalize plans. Scrum Masters capture impediments.</td><td>Flow Metrics Analyst updates predictability scores</td></tr>
+        <tr><td>30 min</td><td><strong>Outcome Breakout</strong><br>Finalize the PI Outcome Planning Board</td><td>ART finalizes board. RTE ensures completeness.</td><td>Co-Pilot validates board completeness and consistency</td></tr>
+        <tr><td>1 hr</td><td><strong>Final Plan Review</strong><br>Confidence vote and commitment</td><td>Teams vote. RTE records. Leadership addresses concerns.</td><td>Co-Pilot aggregates votes, flags low-confidence areas for discussion</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 Sense and Respond — The 2-Hour Iteration Event</div>
+    <p class="text-sm text-secondary mb-6">The half-day Inspect and Adapt event has been replaced by a two-hour Sense and Respond event every iteration, driving accelerated learning. This event also includes the activities formerly present in the System Demo. Leadership may trigger additional sessions when significant data requires an immediate system-level response.</p>
+
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Hour 1</span><span class="role-name">Sense — Review & Demonstrate</span></div>
+        <div class="role-desc">Review metrics, customer feedback, and product demonstrations. Assess what the ART has learned since the last event. Evaluate rapid flow of local experiments. Ensure collective learning is surfaced. Attendees: RTE, AI-Native Teams, Product Management, System Architects, Business Owners, AI Value Architects.</div>
+      </div>
+      <div class="role-card governance">
+        <div class="role-header"><span class="role-badge badge-gov">Hour 2</span><span class="role-name">Respond — Decide & Pivot</span></div>
+        <div class="role-desc">Identify response areas based on sensed evidence. Explore options and agree on decisions regarding system pivots or capacity adjustments. Maintain technical coherence and strategic alignment across all teams. Output: agreed decisions, adjusted priorities, and escalations.</div>
+      </div>
+    </div>
+
+    <div class="highlight-box mt-6">
+      <strong>Note:</strong> Some ARTs may choose to run the problem-solving portion of the SAFe Inspect and Adapt event periodically if it supports their ongoing problem-solving approach. Sense and Respond provides the cadence; problem-solving provides the depth when needed.
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL 8: GO-TO-MARKET -->
+<div id="gtm" class="panel" role="tabpanel" aria-labelledby="tab-gtm" hidden>
+
+  <div class="card mb-6">
+    <div class="card-title">🚀 Go-to-Market — From Release to Realized Value</div>
+    <p class="text-sm text-secondary mb-6">Go-to-Market (GTM) transforms a released product into realized value. AI-Native SAFe treats it as a system operating at two levels: a durable GTM strategy and recurring GTM cycles. The speed at which AI-Empowered products are released promotes embedding product marketing, sales enablement, and customer success directly within AI-Native ARTs.</p>
+
+    <div class="card-grid">
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Strategy</span><span class="role-name">GTM Strategy (Durable)</span></div>
+        <div class="role-desc">The durable set of choices about how an organization reaches its intended market across the product lifecycle: which GTM approach to lead with, which customers to serve first, and which functions must be aligned to serve them. Defined by Product Management with Business Owner input.</div>
+      </div>
+      <div class="role-card human">
+        <div class="role-header"><span class="role-badge badge-human">Cycle</span><span class="role-name">GTM Cycle (Recurring)</span></div>
+        <div class="role-desc">The recurring execution of GTM strategy. In an AI-Native organization, cycles run continuously at a rhythm set by product context and release frequency. Not all releases motivate a GTM cycle — the essential choice is determining which releases warrant activation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-title">📐 GTM Three Dimensions</div>
+    <div class="gov-grid">
+      <div class="gov-card">
+        <h4>Value Activation</h4>
+        <ul>
+          <li>Communicating the product's value to its intended market</li>
+          <li>Product marketing embedded within the ART ensures messaging aligns with actual capabilities</li>
+          <li>AI assists in personalizing value propositions at scale</li>
+        </ul>
+      </div>
+      <div class="gov-card">
+        <h4>Adoption Enablement</h4>
+        <ul>
+          <li>Ensuring users can successfully adopt and use the product</li>
+          <li>Sales enablement and customer success functions co-located with delivery teams</li>
+          <li>AI-powered onboarding and in-app guidance reduce time-to-value</li>
+        </ul>
+      </div>
+      <div class="gov-card" style="grid-column: 1 / -1;">
+        <h4>Outcome Measurement</h4>
+        <ul>
+          <li>Confirming that the product is generating its intended results for customers and the organization</li>
+          <li>Connecting GTM activities directly to ART outcomes and ROI</li>
+          <li>Feedback from outcome measurement flows back into the AI Innovation Pipeline</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 The GTM Cycle — Four Steps</div>
+    <div class="flow">
+      <div class="flow-box">Pick the<br>Time</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Know the<br>Audience</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Optimize Time<br>to Value</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Trace to<br>Outcomes</div>
+    </div>
+    <p class="text-xs text-tertiary text-center mt-4">Each cycle is AI-assisted in execution and refined by AI-generated insights. Product marketing, sales enablement, and customer success are embedded within the ART.</p>
+  </div>
+
+</div>
+
+<!-- PANEL 9: RACI MATRIX -->
+<div id="raci" class="panel" role="tabpanel" aria-labelledby="tab-raci" hidden>
+  <div class="card">
+    <div class="card-title">📋 RACI Matrix — AI-Native Enterprise Transformation</div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Activity / Deliverable</th><th>AI Value Architect</th><th>CAEO / Risk</th><th>Product Mgmt</th><th>RTE</th><th>Dev Teams</th><th>AI Agents</th><th>AI Ethics Board</th></tr>
+        <tr><td>Define AI Risk Appetite & Boundaries</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-r">R</td></tr>
+        <tr><td>Outcome Tree & OKR Definition</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+        <tr><td>Agent Design & Prompt Engineering</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td></tr>
+        <tr><td>AI Ethics Tiering</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-a">A</td></tr>
+        <tr><td>PI Outcome Planning — AI-Augmented</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+        <tr><td>Sense and Respond Event</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+        <tr><td>Code Generation & Validation</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+        <tr><td>Security & Compliance Scanning</td><td class="raci-c">C</td><td class="raci-a">A</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td></tr>
+        <tr><td>Go-to-Market Strategy & Cycles</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+        <tr><td>Customer-Facing AI Feature Release</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-a">A</td></tr>
+        <tr><td>Incident Response (AI Drift/Bias)</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-a">A</td></tr>
+        <tr><td>Retrospective & Relentless Improvement</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+      </table>
+    </div>
+    <p class="text-xs text-tertiary mt-4">
+      <span class="raci-r">R</span> = Responsible &nbsp;|&nbsp; <span class="raci-a">A</span> = Accountable &nbsp;|&nbsp; <span class="raci-c">C</span> = Consulted &nbsp;|&nbsp; <span class="raci-i">I</span> = Informed
+    </p>
+  </div>
+</div>
+
+<!-- PANEL 10: IMPLEMENTATION ROADMAP -->
+<div id="roadmap" class="panel" role="tabpanel" aria-labelledby="tab-roadmap" hidden>
+  <div class="card mb-6">
+    <div class="card-title">🗺️ 90-Day Implementation Roadmap — AI-Native Enterprise</div>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-title">Phase 1: Foundation & Inventory (Days 1–30)</div>
+        <div class="roadmap-desc">
+          • Complete honest AI inventory: every model, agent, LLM endpoint, and third-party SaaS with embedded AI<br>
+          • Establish AI Governance Committee with C-level, legal, risk, and business line leaders; clarify PMO/VMO accountability<br>
+          • Update governance policy to explicitly include GenAI and agentic systems; define materiality tiers aligned to four-pillar framework<br>
+          • Launch AI-Empowered Agility training for executives and AI-Native Foundations for practitioners<br>
+          • Deploy Regulatory Horizon Scanner agent for continuous governance monitoring
+        </div>
+      </div>
+      <div class="roadmap-item p2">
+        <div class="roadmap-title">Phase 2: Pilot ART & Agent Deployment (Days 31–60)</div>
+        <div class="roadmap-desc">
+          • Select one non-material value stream (e.g., internal operations or tooling) for first AI-Native ART<br>
+          • Identify and empower AI Value Architect(s) from existing SM/TC/PM/Architect pool<br>
+          • Deploy DevEx Agent in supervised mode; establish human validation gates<br>
+          • Implement Quality & Compliance Guard Agent with auto-blocking for policy violations<br>
+          • Run first PI Outcome Planning with PI Planning Co-Pilot; measure time savings and alignment quality<br>
+          • Establish Sense and Respond events every iteration; retire Inspect & Adapt cadence<br>
+          • Establish audit logging in SIEM for all AI interactions; identity-bind to IdP
+        </div>
+      </div>
+      <div class="roadmap-item p3">
+        <div class="roadmap-title">Phase 3: Scale & Govern (Days 61–90)</div>
+        <div class="roadmap-desc">
+          • Expand to material value streams with full HITL controls<br>
+          • Deploy Dependency Orchestrator across Solution Trains; integrate with existing ALM toolchain<br>
+          • Embed Go-to-Market capabilities (product marketing, sales enablement, customer success) within pilot ARTs<br>
+          • Conduct first "Effective Challenge" review of AI agents by independent validators<br>
+          • Establish outcome-based funding: connect every AI investment to measurable business outcomes including token-cost visibility<br>
+          • Launch AI Value Architect role formally across all ARTs; define outcome trees for top 5 value streams
+        </div>
+      </div>
+      <div class="roadmap-item p4">
+        <div class="roadmap-title">Phase 4: Optimize & Transform (Days 91–180)</div>
+        <div class="roadmap-desc">
+          • Transition from AI-Empowered to AI-Native: restructure teams around 3–7 member human-AI capability pairs<br>
+          • Implement continuous monitoring dashboards for agent performance, drift, and hallucination rates<br>
+          • Achieve 15–30% cycle time compression in pilot ARTs; document and replicate patterns<br>
+          • Prepare for external audit with complete audit trails, model cards, and lineage documentation<br>
+          • Host first enterprise "Transformation Review & Adapt" — measure transformation impact, recalibrate<br>
+          • Enroll AI Value Architects in official Scaled Agile training (released August 25, 2026)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Critical Success Factor:</strong> Do not declare victory after buying copilots. Look for a working outcome tree, curated context, measurable product impact, explicit agent boundaries, variable-cost visibility, and teams that can sense evidence and respond without waiting for a long approval chain.
+  </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<section class="connect-section" id="connect">
+  <div class="connect-card">
+    <h2>Let's Build the AI-Native Enterprise Together</h2>
+    <p>Whether you're designing your first AI-Native ART or scaling across a multi-train enterprise transformation, I'd love to connect and share what we've learned.</p>
+    <div class="hero-cta">
+      <a href="https://linkedin.com/in/edwin-vasanth" class="btn btn-primary">Connect on LinkedIn</a>
+      <a href="mailto:v.edwinbhasker@gmail.com" class="btn btn-secondary">Send an Email</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">AI-Native <span>Enterprise</span></div>
+    <div class="social-links">
+      <a href="https://linkedin.com/in/edwin-vasanth" title="LinkedIn" aria-label="LinkedIn profile">in</a>
+      <a href="https://twitter.com/edwinvasanth" title="X" aria-label="X profile">𝕏</a>
+      <a href="mailto:v.edwinbhasker@gmail.com" title="Email" aria-label="Send email">@</a>
+    </div>
+    <p class="footer-text">© 2026 Edwin Vasanth. AI-Native Enterprise Transformation.</p>
+    <p class="footer-text">This content represents the author's independent professional perspective and is not legal, regulatory, or compliance advice. Institutions should consult qualified legal counsel and compliance officers before implementing any AI governance program.</p>
+    <p class="footer-text">SAFe® and Scaled Agile Framework® are registered trademarks of Scaled Agile, Inc. PMI® and PMP® are registered marks of Project Management Institute, Inc. This is an independent practitioner framework and is not endorsed by Scaled Agile, Inc. or PMI.</p>
+  </div>
+</footer>
+
+<script>
+function toggleMenu() {
+  const navLinks = document.querySelector('.nav-links');
+  const btn = document.querySelector('.mobile-menu-btn');
+  const isOpen = navLinks.style.display === 'flex';
+  if (isOpen) {
+    navLinks.style.display = 'none';
+    btn.setAttribute('aria-expanded', 'false');
+  } else {
+    navLinks.style.display = 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '68px';
+    navLinks.style.left = '0';
+    navLinks.style.right = '0';
+    navLinks.style.background = 'rgba(250,249,247,0.98)';
+    navLinks.style.padding = '20px 32px';
+    navLinks.style.backdropFilter = 'blur(20px)';
+    navLinks.style.borderBottom = '1px solid var(--border)';
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.remove('active');
+    p.setAttribute('hidden', 'true');
+  });
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+    t.setAttribute('tabindex', '-1');
+  });
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).removeAttribute('hidden');
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  btn.setAttribute('tabindex', '0');
+  btn.focus();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const tablist = document.querySelector('.tabs');
+  if (!tablist) return;
+  const tabs = Array.from(tablist.querySelectorAll('.tab'));
+  tablist.addEventListener('keydown', function(e) {
+    const currentIdx = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+    let nextIdx = currentIdx;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIdx = (currentIdx + 1) % tabs.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIdx = (currentIdx - 1 + tabs.length) % tabs.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIdx = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIdx = tabs.length - 1;
+    }
+    if (nextIdx !== currentIdx) {
+      tabs[nextIdx].focus();
+      tabs[nextIdx].click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
